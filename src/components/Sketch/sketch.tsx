@@ -177,7 +177,7 @@ class Sketch extends React.Component {
     }
 
     getP5Sketch() {
-        return this.myP5;
+        return this.myRef;
     }
     componentDidMount() {
         //We create a new p5 object on component mount, feed it
