@@ -1,6 +1,7 @@
 import React from 'react';
 import { AppBar, Toolbar, Button } from '@material-ui/core';
 import InfoDialog from './InfoDialog';
+import LoadVideoBtn from './LoadVideoBtn';
 
 export default function NavBar() {
   return (
@@ -20,17 +21,7 @@ export default function NavBar() {
             hidden
           />
         </Button>
-        <Button
-          variant="contained"
-          component="label"
-        >
-          LOAD VIDEO (MP4)
-          <input
-            type="file"
-            accept=".mp4"
-            hidden
-          />
-        </Button>
+        <LoadVideoBtn/>
         <Button
           variant="contained"
           component="label"
