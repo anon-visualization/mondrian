@@ -1,11 +1,25 @@
-import React from 'react';
-import { AppBar, Toolbar, Button } from '@material-ui/core';
-import InfoDialog from './InfoDialog';
-import LoadVideoBtn from './LoadVideoBtn';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, Button, makeStyles, useTheme, Theme, createStyles} from '@material-ui/core';
 
-export default function NavBar() {
+import InfoDialog from './InfoDialog';
+
+interface NavBarProps {
+  video: string,
+}
+
+const NavBar = ({ video }: NavBarProps) => {
+
+  // const [video, setVideo] = useState([]);
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    console.log(file);
+  }
+
   return (
-  <div>
+  <div style={{
+    maxHeight: '60px'
+  }}>
     <React.Fragment>
     <AppBar position="static">
       <Toolbar>
@@ -21,7 +35,21 @@ export default function NavBar() {
             hidden
           />
         </Button>
-        <LoadVideoBtn/>
+        <Button
+            variant='contained'
+            component='label'
+        >
+            LOAD VIDEO (MP4)
+            <input
+                id='videoFile'
+                type='file'
+                accept='.mp4'
+                hidden
+
+                value={video}
+                onChange={handleFileChange}
+            />
+        </Button>
         <Button
           variant="contained"
           component="label"
@@ -40,3 +68,5 @@ export default function NavBar() {
   </div>
   );
 }
+
+export default NavBar;

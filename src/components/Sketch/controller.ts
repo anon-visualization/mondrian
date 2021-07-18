@@ -7,10 +7,6 @@ export class Controller {
         this.mediator = mediator;
     }
 
-    handleIntroButton() {
-        this.mediator.updateIntro();
-    }
-
     handleSaveButton() {
         this.mediator.writeFile();
     }

@@ -1,5 +1,3 @@
-import Sketch from './sketch';
-
 export class VideoPlayer {
     private videoJumpValue: number;
     private inputMovieWidth: any;
@@ -14,7 +12,7 @@ export class VideoPlayer {
      * @param  {P5 Instance} sketch
      */
 
-    constructor(fileLocation: string, sketch: Sketch) {
+    constructor(fileLocation: string, sketch: any) {
         this.videoJumpValue = 5; // Integer value in seconds to ff or rewind
         this.inputMovieWidth = null; // Original pixel size of video
         this.inputMovieHeight = null;
