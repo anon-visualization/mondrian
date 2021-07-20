@@ -4,8 +4,8 @@ import { AppBar, Toolbar, Button, makeStyles, useTheme, Theme, createStyles} fro
 import InfoDialog from './InfoDialog';
 
 const NavBar = (props: any) => {
-  const handleChange = (e: any) => {
-    props.onChange(e.target.files[0]);
+  const onChange = (e: any) => {
+    props.onChange(e);
   }
 
   return (
@@ -19,9 +19,12 @@ const NavBar = (props: any) => {
           >
           LOAD FLOOR PLAN (PNG/JPG)
           <input
-          type="file"
-          accept=".png,.jpg"
-          hidden
+            name='floorplan'
+            value={props.floorplan}
+            type="file"
+            accept=".png,.jpg"
+            onChange={onChange}
+            hidden
           />
         </Button>
         <Button
@@ -30,10 +33,11 @@ const NavBar = (props: any) => {
         >
           LOAD VIDEO (MP4)
           <input
-            name='video-input'
+            name='video'
+            value={props.video}
             type='file'
             accept='.mp4'
-            onChange={handleChange}
+            onChange={onChange}
             hidden
           />
         </Button>
