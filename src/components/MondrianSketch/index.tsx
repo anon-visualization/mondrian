@@ -4,7 +4,7 @@ import p5  from 'p5';
 import { Mediator } from './mediator';
 import { Controller } from './controller';
 
-export default function Sketch(props: any) {
+const MondrianSketch = (props: any) => {
     // const processingRef = useRef() as React.MutableRefObject<HTMLInputElement>;
 
     const Sketch = (p: any) => {
@@ -12,11 +12,11 @@ export default function Sketch(props: any) {
         p.controller = new Controller(p.mediator);
 
         p.preload = function () {
-            p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
+            // p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
         }
 
         p.setup = function () {
-            p.canvas = p.createCanvas(window.innerWidth - 64, window.innerHeight - 64);
+            p.canvas = p.createCanvas(window.innerWidth, window.innerHeight);
             p.floorPlanContainer = {
                 width: p.width / 2,
                 height: p.height,
@@ -35,22 +35,29 @@ export default function Sketch(props: any) {
          * Program loop organizes two drawing modes based on whether data is loaded
          */
         p.draw = () => {
-            console.log('x');
-            if (p.mediator.allDataLoaded()) {
-                if (p.mediator.getIsRecording()) p.mediator.updateRecording(); // records data and updates visualization if in record mode
-                else p.mediator.updateCurPathBug();
-                // If info screen showing, redraw current screen first, then drawKeys
-                if (p.mediator.getIsInfoShowing()) {
-                    p.mediator.updateAllData();
-                    p.drawIntroScreen();
-                }
+            console.log(props);
+            if (props.video) {
+                p.background(0)
+                p.circle(p.width / 2, p.height / 2, 50)
             } else {
-                console.log(props.video);
-                p.drawLoadDataGUI();
-                if (p.mediator.floorPlanLoaded()) p.mediator.updateFloorPlan();
-                else if (p.mediator.videoLoaded()) p.mediator.updateVideoFrame();
-                if (p.mediator.getIsInfoShowing()) p.drawIntroScreen();
+                p.background(100)
+                p.circle(p.width / 2, p.height / 2, 0)
             }
+            // if (p.mediator.allDataLoaded()) {
+            //     if (p.mediator.getIsRecording()) p.mediator.updateRecording(); // records data and updates visualization if in record mode
+            //     else p.mediator.updateCurPathBug();
+            //     // If info screen showing, redraw current screen first, then drawKeys
+            //     if (p.mediator.getIsInfoShowing()) {
+            //         p.mediator.updateAllData();
+            //         p.drawIntroScreen();
+            //     }
+            // } else {
+            //     console.log(props.video);
+            //     p.drawLoadDataGUI();
+            //     if (p.mediator.floorPlanLoaded()) p.mediator.updateFloorPlan();
+            //     else if (p.mediator.videoLoaded()) p.mediator.updateVideoFrame();
+            //     if (p.mediator.getIsInfoShowing()) p.drawIntroScreen();
+            // }
         }
 
         /**
@@ -192,4 +199,6 @@ export default function Sketch(props: any) {
     return (
         <></>
     );
-}
+};
+
+export default MondrianSketch;

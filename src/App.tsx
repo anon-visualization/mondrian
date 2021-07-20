@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import Sketch from './components/Sketch';
+import MondrianSketch from './components/MondrianSketch';
 import NavBar from './components/NavBar';
+import FileHandler from './utils/FileHandler';
 
 import './App.css';
 
 export default function App() {
-  const [isStarted, setIsStarted] = useState(false);
-  const [video, setVideo] = useState('');
-  const [floorPlan, setFloorplan] = useState('');
+  const [videoFile, setVideoFile] = useState('');
+
+  const onChange = (data: any) => {
+    setVideoFile(data);
+    console.log(`DATA!!!!! ${data.name}`);
+  }
+
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar onChange={ onChange } data={videoFile} />
 
       <div className='App'>
-        <Sketch />
+        <MondrianSketch { ... videoFile}/>
       </div>
     </div>
   );
