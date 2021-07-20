@@ -6,7 +6,6 @@ import { Controller } from './controller';
 
 const MondrianSketch = (props: any) => {
     // const processingRef = useRef() as React.MutableRefObject<HTMLInputElement>;
-
     const Sketch = (p: any) => {
         p.mediator = new Mediator(p);
         p.controller = new Controller(p.mediator);
@@ -35,12 +34,13 @@ const MondrianSketch = (props: any) => {
          * Program loop organizes two drawing modes based on whether data is loaded
          */
         p.draw = () => {
-            console.log(props);
-            if (props.video) {
-                p.background(0)
+
+            console.log(props.videoFilePath);
+            if (props.videoFileName) {
+                p.background(23)
                 p.circle(p.width / 2, p.height / 2, 50)
             } else {
-                p.background(100)
+                p.background(200)
                 p.circle(p.width / 2, p.height / 2, 0)
             }
             // if (p.mediator.allDataLoaded()) {
@@ -179,11 +179,9 @@ const MondrianSketch = (props: any) => {
         }
 
         p.mousePressed = () => {
-            console.log(props);
             if (p.mediator.allDataLoaded() && p.overRect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height)) {
                 p.mediator.playPauseRecording();
             }
-
         }
 
         p.overRect = (x: any, y: any, boxWidth: any, boxHeight: any) => {
@@ -197,7 +195,9 @@ const MondrianSketch = (props: any) => {
 
 
     return (
+        <React.Fragment>
         <></>
+        </React.Fragment>
     );
 };
 

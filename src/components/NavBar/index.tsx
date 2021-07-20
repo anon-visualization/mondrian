@@ -4,7 +4,6 @@ import { AppBar, Toolbar, Button, makeStyles, useTheme, Theme, createStyles} fro
 import InfoDialog from './InfoDialog';
 
 const NavBar = (props: any) => {
-
   const handleChange = (e: any) => {
     props.onChange(e.target.files[0]);
   }
@@ -34,7 +33,7 @@ const NavBar = (props: any) => {
             name='video-input'
             type='file'
             accept='.mp4'
-            onChange={ handleChange }
+            onChange={handleChange}
             hidden
           />
         </Button>
