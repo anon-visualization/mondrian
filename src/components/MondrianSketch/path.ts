@@ -1,81 +1,79 @@
 import p5 from 'p5';
 
 export class Path {
-    private paths: Array<any>;
+    public paths: Array<any>;
     private colorList: Array<string>;
-    private currPath: any;
-    private currFileToOutput: number;
+    public curFileToOutput: number;
+    public curPath: any;
 
     constructor() {
         this.paths = []; // List to hold all path objects created
         this.colorList = ['#6a3d9a', '#ff7f00', '#33a02c', '#1f78b4', '#e31a1c', '#ffff99', '#b15928', '#cab2d6', '#fdbf6f', '#b2df8a', '#a6cee3', '#fb9a99'];
-        this.currPath = this.createPath([], [], [], 0, 7); // initialize Path with empty arrays, color black (0), path strokeWeight
-        this.currFileToOutput = 0; // Integer counter to mark current file number to write to output
+        this.curPath = this.createPath([], 0, 7); // initialize Path with empty arrays, color black (0), path strokeWeight
+        this.curFileToOutput = 0; // Integer counter to mark current file number to write to output
     }
 
     /**
-     * Factory function that creates a Path object
-     * Path object represents object being recorded such as a person or artifact as decimal / number lists of x / y pixel positions and time values in seconds / fractions of seconds with color and strokeWeight
-     * @param  {Array} xPos
-     * @param  {Array} yPos
-     * @param  {Array} tPos
-     */
-    createPath(xPos: Array<number>, yPos: Array<number>, tPos: Array<number>, pColor: any, weight: number) {
+      * Path object represents object being recorded such as a person or artifact
+      */
+     createPath(pointArray: Array<any>, pColor: any, weight: any) {
         return {
-            xPos,
-            yPos,
-            tPos,
-            pColor, // color of path
-            weight // strokeweight of path
+            pointArray, // array of point objects
+            pColor, // path color
+            weight // path strokeWeight
         };
     }
 
-    addPoint(point: any) {
-        this.currPath.xPos.push(point.xPos);
-        this.currPath.yPos.push(point.yPos);
-        this.currPath.tPos.push(point.time);
+    createPoint(mouseXPos: any, mouseYPos: any, fpXPos: any, fpYPos: any, tPos: any) {
+        return {
+            mouseXPos, // array of mouse positions to display paths in floor plan container, provides ability to draw paths while program runs
+            mouseYPos,
+            fpXPos,
+            fpYPos,
+            tPos,
+        };
     }
 
-    addPath() {
-        this.paths.push(this.createPath(this.currPath.xPos, this.currPath.yPos, this.currPath.tPos, this.colorList[this.paths.length % this.colorList.length], 5));
+    addCurPathToList() {
+        this.paths.push(this.createPath(this.curPath.pointArray, this.colorList[this.paths.length % this.colorList.length], 5));
     }
 
     /**
-     * Add 1 new data point to currPath lists for amountInSeconds fastForwarded
-     * @param  {Integer/Number} amountInSeconds
-     */
-    fastForward(amountInSeconds: number) {
-        // IMPORTANT: get last values from cur lists first before loop. Uses to set x/yPos and increment tPos
-        const xPos = this.currPath.xPos[this.currPath.tPos.length - 1];
-        const yPos = this.currPath.yPos[this.currPath.tPos.length - 1];
-        const tPos = this.currPath.tPos[this.currPath.tPos.length - 1];
-        // Add values for each second jumped by VideoJumpvalue, xPos and yPos are same but add i to tPos as time is increasing
-        // Start at 1 to record tPos properly
-        for (let i = 1; i <= amountInSeconds; i++) {
-            this.currPath.xPos.push(xPos);
-            this.currPath.yPos.push(yPos);
-            this.currPath.tPos.push(+(tPos + i).toFixed(2));
+      * NOTE: Make sure to round all values
+      */
+     addPointToCurPath(mouseXPos: any, mouseYPos: any, fpXPos: any, fpYPos: any, time: any) {
+        this.curPath.pointArray.push(this.createPoint(this.round(mouseXPos), this.round(mouseYPos), this.round(fpXPos), this.round(fpYPos), this.round(time)));
+    }
+
+    /**
+      * Add 1 new data point to curPath lists for amountInSeconds fastForwarded
+      * @param  {Integer/Number} amountInSeconds
+      */
+    fastForward(amountInSeconds: any) {
+        const point = this.curPathEndPoint; // IMPORTANT: get last value before loop
+        for (let i = 1; i <= amountInSeconds; i++) { // only tPos is different with each added point
+            this.curPath.pointArray.push(this.createPoint(point.mouseXPos, point.mouseYPos, point.fpXPos, point.fpYPos, this.round(point.tPos + i)));
         }
     }
     /**
-     * Remove all points from currPath Lists greater than rewindToTime parameter
+     * Remove all points from curPath Lists greater than rewindToTime parameter
      * @param  {Float/Number} rewindToTime
      */
     rewind(rewindToTime: number) {
         // IMPORTANT: Start at end of x or y list (NOT t) and delete up to newEndTime
-        for (let i = this.currPath.xPos.length - 1; i >= 0; i--) {
-            if (this.currPath.tPos[i] > rewindToTime) {
-                this.currPath.tPos.pop();
-                this.currPath.xPos.pop();
-                this.currPath.yPos.pop();
+        for (let i = this.curPath.xPos.length - 1; i >= 0; i--) {
+            if (this.curPath.tPos[i] > rewindToTime) {
+                this.curPath.tPos.pop();
+                this.curPath.xPos.pop();
+                this.curPath.yPos.pop();
             } else break;
         }
     }
 
     clearCurPath() {
-        this.currPath.xPos = [];
-        this.currPath.yPos = [];
-        this.currPath.tPos = [];
+        this.curPath.xPos = [];
+        this.curPath.yPos = [];
+        this.curPath.tPos = [];
     }
 
     clearAllPaths() {
@@ -89,27 +87,40 @@ export class Path {
         table.addColumn(FILEHEADERS[0]);
         table.addColumn(FILEHEADERS[1]);
         table.addColumn(FILEHEADERS[2]);
-        for (let i = 0; i < this.currPath.xPos.length; i++) {
+        for (let i = 0; i < this.curPath.xPos.length; i++) {
             let newRow = table.addRow();
-            newRow.setNum(FILEHEADERS[0], this.currPath.tPos[i]);
-            newRow.setNum(FILEHEADERS[1], this.currPath.xPos[i]);
-            newRow.setNum(FILEHEADERS[2], this.currPath.yPos[i]);
+            newRow.setNum(FILEHEADERS[0], this.curPath.tPos[i]);
+            newRow.setNum(FILEHEADERS[1], this.curPath.xPos[i]);
+            newRow.setNum(FILEHEADERS[2], this.curPath.yPos[i]);
         }
         return table;
     }
 
     getCurrPath() {
-        return this.currPath;
+        return this.curPath;
     }
 
     getCurrFileToOutput() {
-        return this.currFileToOutput;
+        return this.curFileToOutput;
     }
     setCurrFileToOutput(i: number) {
-        this.currFileToOutput = i;
+        this.curFileToOutput = i;
     }
 
     getPaths() {
         return this.paths;
+    }
+
+    /**
+      * Used to round numbers when saving data and also to compare path/video time to sample data
+      * @param  {Number/Float} value
+      */
+     round(value: any) {
+        return +(value.toFixed(2));
+    }
+
+    get curPathEndPoint() {
+        if (this.curPath.pointArray.length > 0) return this.curPath.pointArray[this.curPath.pointArray.length - 1];
+        else return 0;
     }
 }

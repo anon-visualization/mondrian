@@ -11,15 +11,13 @@ export default function MondrianSketch(p) {
     }
 
     p.preload = () => {
-        // p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
+        p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
     }
 
     p.setup = () => {
+        p.canvas = p.createCanvas(window.innerWidth, window.innerHeight);
         p.mediator = new Mediator(p);
         p.controller = new Controller(p.mediator);
-
-        p.canvas = p.createCanvas(window.innerWidth, window.innerHeight);
-
         p.floorPlanContainer = {
             width: p.width / 2,
             height: p.height,
@@ -34,35 +32,19 @@ export default function MondrianSketch(p) {
         };
     }
 
-    p.myCustomRedrawAccordingToNewPropsHandler = props => {
-        console.log("Updated");
-        if (p.mediator) {
-            if (!p.mediator.floorPlanLoaded() || !p.mediator.videoLoaded()) {
-                console.log(`Props ${props.filePaths.floorplan}`)
-                if (props.filePaths.video) {
-                    p.mediator.loadVideo(URL.createObjectURL(props.videoFilePath));
-                    console.log("Loaded file video");
-                }
-
-                if (props.filePaths.floorplan) {
-                    p.mediator.loadFloorPlan(URL.createObjectURL(props.pictureFilePath));
-                    console.log("Loaded file floorplan")
-                }
-            }
-        }
-    };
-
     /**
      * Program loop organizes two drawing modes based on whether data is loaded
      */
     p.draw = () => {
-        if (p.mediator.allDataLoaded()) {
-            p.background(255, 204, 0)
-            p.circle(p.width / 2, p.height / 2, 50)
-        } else {
-            p.background('red')
-            p.circle(p.width / 2, p.height / 2, 0)
-        }
+        // if (p.mediator.allDataLoaded()) {
+        //     p.background(255, 204, 0)
+        //     p.circle(p.width / 2, p.height / 2, 50)
+        // } else {
+        //     p.background('red')
+        //     p.circle(p.width / 2, p.height / 2, 0)
+        // }
+
+        p.mediator.updateDrawLoop();
         // if (p.mediator.allDataLoaded()) {
         //     if (p.mediator.getIsRecording()) p.mediator.updateRecording(); // records data and updates visualization if in record mode
         //     else p.mediator.updateCurPathBug();
@@ -114,6 +96,14 @@ export default function MondrianSketch(p) {
         for (let i = 1; i < p.xPos.length; i++) {
             p.line(p.scaleXposToDisplay(p.xPos[i]), p.scaleYposToDisplay(p.yPos[i]), p.scaleXposToDisplay(p.xPos[i - 1]), p.scaleYposToDisplay(p.yPos[i - 1]));
         }
+    }
+
+    p.drawLoadDataBackground = () => {
+        p.noStroke();
+        p.fill(225);
+        p.rect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height);
+        p.fill(200);
+        p.rect(p.videoContainer.xPos, p.videoContainer.yPos, p.videoContainer.width, p.videoContainer.height);
     }
 
     p.scaleXposToDisplay = function (xPos) {
