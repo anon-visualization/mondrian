@@ -10,14 +10,15 @@ export default function MondrianSketch(p) {
         video: "",
     }
 
+    const mediator = new Mediator(p);
+    const controller = new Controller(mediator);
+
     p.preload = () => {
         p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
     }
 
     p.setup = () => {
-        p.canvas = p.createCanvas(window.innerWidth, window.innerHeight);
-        p.mediator = new Mediator(p);
-        p.controller = new Controller(p.mediator);
+        p.createCanvas(window.innerWidth, window.innerHeight);
         p.floorPlanContainer = {
             width: p.width / 2,
             height: p.height,
@@ -44,7 +45,7 @@ export default function MondrianSketch(p) {
         //     p.circle(p.width / 2, p.height / 2, 0)
         // }
 
-        p.mediator.updateDrawLoop();
+        mediator.updateDrawLoop();
         // if (p.mediator.allDataLoaded()) {
         //     if (p.mediator.getIsRecording()) p.mediator.updateRecording(); // records data and updates visualization if in record mode
         //     else p.mediator.updateCurPathBug();
@@ -107,11 +108,11 @@ export default function MondrianSketch(p) {
     }
 
     p.scaleXposToDisplay = function (xPos) {
-        return p.floorPlanContainer.xPos + (xPos / (p.mediator.getFloorPlanWidth() / p.floorPlanContainer.width));
+        return p.floorPlanContainer.xPos + (xPos / (mediator.getFloorPlanWidth() / p.floorPlanContainer.width));
     }
 
     p.scaleYposToDisplay = function (yPos) {
-        return p.floorPlanContainer.yPos + (yPos / (p.mediator.getFloorPlanHeight() / p.floorPlanContainer.height));
+        return p.floorPlanContainer.yPos + (yPos / (mediator.getFloorPlanHeight() / p.floorPlanContainer.height));
     }
 
     /**
@@ -136,6 +137,7 @@ export default function MondrianSketch(p) {
 
     p.drawFloorPlan = function (floorPlan) {
         p.fill(255); // draw white screen in case floor plan image has any transparency
+        console.log("Draw floor")
         p.stroke(255);
         p.rect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height);
         p.image(floorPlan, p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height);
@@ -182,15 +184,15 @@ export default function MondrianSketch(p) {
      * While wrapped in a P5 instance, p P5 method operates globally on the window (there can't be two of these methods)
      */
     p.keyPressed = () => {
-        if (p.mediator.allDataLoaded()) {
-            if (p.key === 'r' || p.key === 'R') p.mediator.rewind();
-            else if (p.key === 'f' || p.key === 'F') p.mediator.fastForward();
+        if (mediator.allDataLoaded()) {
+            if (p.key === 'r' || p.key === 'R') mediator.rewind();
+            else if (p.key === 'f' || p.key === 'F') mediator.fastForward();
         }
     }
 
     p.mousePressed = () => {
-        if (p.mediator.allDataLoaded() && p.overRect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height)) {
-            p.mediator.playPauseRecording();
+        if (mediator.allDataLoaded() && p.overRect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height)) {
+            mediator.playPauseRecording();
         }
     }
 

@@ -156,13 +156,13 @@ export class Mediator {
      * Called from VideoPlayer Class, updates all data/views after video is loaded
      */
     newVideoLoaded() {
-        console.log("New Video Loaded");
         this.stopRecording(); // necessary to be able to draw starting frame before playing the video
         this.path.clearAllPaths();
         if (this.floorPlanLoaded()) this.sk.drawFloorPlan(this.floorPlan); // clear floor plan drawing area
     }
 
     loadFloorPlan(fileLocation: any) {
+
         this.sk.loadImage(fileLocation, (img: any) => {
             this.newFloorPlanLoaded(img);
             URL.revokeObjectURL(fileLocation);
