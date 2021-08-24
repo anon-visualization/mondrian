@@ -47,10 +47,16 @@ export class Mediator {
             if (this.isRecording) this.updateTranscription();
             if (this.isInfoShowing) this.sk.drawIntroScreen();
         } else {
-            this.sk.drawLoadDataBackground();
-            if (this.floorPlanLoaded()) this.sk.drawFloorPlan(this.floorPlan);
-            else if (this.videoLoaded()) this.sk.drawVideoFrame(this.videoPlayer, this.videoPlayer.curTime);
-            if (this.isInfoShowing) this.sk.drawIntroScreen();
+            if (!this.videoLoaded() && this.floorPlanLoaded()) {
+                this.sk.drawFloorPlan(this.floorPlan);
+            } else if (this.videoLoaded() && !this.floorPlanLoaded()) {
+                this.sk.drawVideoFrame(this.videoPlayer, this.videoPlayer.curTime);
+            } else { // Both have NOT loaded
+                this.sk.drawLoadDataBackground(1);
+            }
+            // this.sk.drawLoadDataBackground();
+            // if (this.floorPlanLoaded()) this.sk.drawFloorPlan(this.floorPlan);
+            // else if (this.videoLoaded()) this.sk.drawVideoFrame(this.videoPlayer, this.videoPlayer.curTime);
         }
     }
 

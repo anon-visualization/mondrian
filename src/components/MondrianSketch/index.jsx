@@ -3,18 +3,19 @@ import { P5Wrapper } from 'react-p5-wrapper';
 
 import { Mediator } from './mediator';
 import { Controller } from './controller';
+import { isPropertySignature } from 'typescript';
 
 export default function MondrianSketch(p) {
-    let filePaths = {
-        floorplan: "",
-        video: "",
-    }
-
     const mediator = new Mediator(p);
     const controller = new Controller(mediator);
 
-    p.preload = () => {
-        p.font_Lato = p.loadFont("data/fonts/Lato-Light.ttf");
+    p.updateWithProps = props => {
+        console.log(props);
+        if (props.floorplan) {
+            console.log("HELLO FLOORPLAN");
+        } else if (props.video) {
+            console.log("HELLO VIDEO");
+        }
     }
 
     p.setup = () => {
@@ -99,12 +100,17 @@ export default function MondrianSketch(p) {
         }
     }
 
-    p.drawLoadDataBackground = () => {
-        p.noStroke();
-        p.fill(225);
-        p.rect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height);
-        p.fill(200);
-        p.rect(p.videoContainer.xPos, p.videoContainer.yPos, p.videoContainer.width, p.videoContainer.height);
+    p.drawLoadDataBackground = (a) => {
+        if (a == 1) {
+            p.text("Please load floor plan and image", 300, 300);
+        } else {
+            p.noStroke();
+            p.fill(15);
+            p.rect(p.floorPlanContainer.xPos, p.floorPlanContainer.yPos, p.floorPlanContainer.width, p.floorPlanContainer.height);
+            p.fill(200);
+            p.rect(p.videoContainer.xPos, p.videoContainer.yPos, p.videoContainer.width, p.videoContainer.height);
+
+        }
     }
 
     p.scaleXposToDisplay = function (xPos) {

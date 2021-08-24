@@ -1,35 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import MondrianSketch from './components/MondrianSketch';
-import P5Wrapper from "react-p5-wrapper";
+import ReactP5Wrapper from "react-p5-wrapper";
 
 import NavBar from './components/NavBar';
-import FileHandler from './utils/FileHandler';
 
 import './App.css';
 
-const initialFilePaths = {
-  floorplan: "",
-  video: "",
-};
-
 export default function App() {
-  const [filePaths, setFilePaths] = useState(initialFilePaths);
+  const [floorplan, setFloorplan] = useState("");
+  const [video, setVideo] = useState("");
 
-  const onChange = (e) => {
-    const { name, value } = e.target;
-    setFilePaths({
-      ... filePaths,
-      [name]: value,
-    });
-  };
+  const handleInput = (e) => {
+    const fileUrl = e.target.value;
+    console.log(fileUrl);
+
+    if (fileUrl.includes("mp4")) {
+      setVideo(e.target.value);
+    } else {
+      setFloorplan(e.target.value);
+    }
+  }
 
   return (
     <div>
-      <NavBar onChange={onChange} filePaths={filePaths} />
-      <P5Wrapper
+      <NavBar
+        handleInput={handleInput}
+        floorplan={floorplan}
+        video={video}
+      />
+      <ReactP5Wrapper
         sketch={MondrianSketch}
-        filePaths={filePaths}
+        video={video}
+        floorplan={floorplan}
       />
     </div>
   );
