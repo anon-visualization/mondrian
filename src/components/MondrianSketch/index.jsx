@@ -8,45 +8,48 @@ import { isPropertySignature } from 'typescript';
 export default function MondrianSketch(p) {
     const mediator = new Mediator(p);
     const controller = new Controller(mediator);
+    let floorplanPath = "";
+    let videoPath = "";
+
+    p.setup = () => p.createCanvas(800, 800);
+        // p.createCanvas(window.innerWidth, window.innerHeight);
+        // p.floorPlanContainer = {
+        //     width: p.width / 2,
+        //     height: p.height,
+        //     xPos: p.width / 2,
+        //     yPos: 0
+        // };
+        // p.videoContainer = {
+        //     width: p.width / 2,
+        //     height: p.height,
+        //     xPos: 0,
+        //     yPos: 0
+        // };
+    // }
 
     p.updateWithProps = props => {
-        console.log(props);
+        console.log("STUFFF" + props);
         if (props.floorplan) {
             console.log("HELLO FLOORPLAN");
+            floorplanPath = props.floorplan;
         } else if (props.video) {
             console.log("HELLO VIDEO");
+            videoPath = props.video
         }
-    }
-
-    p.setup = () => {
-        p.createCanvas(window.innerWidth, window.innerHeight);
-        p.floorPlanContainer = {
-            width: p.width / 2,
-            height: p.height,
-            xPos: p.width / 2,
-            yPos: 0
-        };
-        p.videoContainer = {
-            width: p.width / 2,
-            height: p.height,
-            xPos: 0,
-            yPos: 0
-        };
     }
 
     /**
      * Program loop organizes two drawing modes based on whether data is loaded
      */
     p.draw = () => {
-        // if (p.mediator.allDataLoaded()) {
-        //     p.background(255, 204, 0)
-        //     p.circle(p.width / 2, p.height / 2, 50)
-        // } else {
-        //     p.background('red')
-        //     p.circle(p.width / 2, p.height / 2, 0)
-        // }
+        if (videoPath == "") {
+            p.background('red')
+        } else {
+            p.background('blue')
+        }
 
-        mediator.updateDrawLoop();
+        p.text(videoPath, 300, 300);
+        // mediator.updateDrawLoop();
         // if (p.mediator.allDataLoaded()) {
         //     if (p.mediator.getIsRecording()) p.mediator.updateRecording(); // records data and updates visualization if in record mode
         //     else p.mediator.updateCurPathBug();
